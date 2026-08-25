@@ -7,7 +7,7 @@ int main() {
                 return -1;
         }
 
-        window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "OpenGLBasics-CPP", NULL, NULL);
 
         if (!window) {
                 glfwTerminate();
