@@ -1,3 +1,7 @@
+// clang-format off
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+// clang-format on
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -11,15 +15,17 @@ class Shader {
         std::string id;
 
         void setBool(std::string name, bool val);
-        void setInt(std::string name, int val);
-        void setFloat(std::string name, float val);
+        void setInt(std::string name, GLint val);
+        void setFloat(std::string name, GLfloat val);
         void setVec3f(std::string name, glm::vec3 val);
-        void setVec3f(std::string name, float x, float y, float z);
+        void setVec3f(std::string name, GLfloat x, GLfloat y, GLfloat z);
         void setVec4f(std::string name, glm::vec4 val);
-        void setVec4f(std::string name, float x, float y, float z, float w);
+        void setVec4f(std::string name, GLfloat x, GLfloat y, GLfloat z,
+                      GLfloat w);
         void setMat4f(std::string name, glm::mat4 mat);
 
-        void compileShader(const char *src, std::uint32_t shaderType);
+        void use();
 
-        // private:
+      private:
+        void compile(const char *src, GLuint shaderType);
 };
