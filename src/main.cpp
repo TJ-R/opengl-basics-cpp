@@ -1,7 +1,9 @@
 #include <glad/glad.h>
 
+#include "./headers/camera.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <iostream>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -23,28 +25,30 @@ float lastFrame = 0.0f;
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main() {
-        GLFWwindow *window;
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        if (!glfwInit()) {
-                return -1;
-        }
+        GLFWwindow *window =
+            glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
 
-        window = glfwCreateWindow(1280, 720, "OpenGLBasics-CPP", NULL, NULL);
-
-        if (!window) {
+        if (window == NULL) {
+                std::cout << "Failed to create GLFW window.\n";
                 glfwTerminate();
                 return -1;
         }
 
         glfwMakeContextCurrent(window);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetScrollCallback(window, scroll_callback);
 
-        // Looping till window closes
-        while (!glfwWindowShouldClose(window)) {
-                glClear(GL_COLOR_BUFFER_BIT);
-                glfwSwapBuffers(window);
-                glfwPollEvents();
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+                std::cout << "Failed to initialize GLAD\n";
         }
 
-        glfwTerminate();
-        return 0;
+        glEnable(GL_DEPTH_TEST);
 }
