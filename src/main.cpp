@@ -1,8 +1,11 @@
 #include <glad/glad.h>
 
-#include "../external/stb_image/stb_image.h"
 #include "./headers/camera.h"
 #include "./headers/shader.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image/stb_image.h"
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
