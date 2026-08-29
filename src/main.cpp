@@ -35,8 +35,8 @@ int main() {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        GLFWwindow *window =
-            glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT,
+                                              "OpenGLBasics-CPP", NULL, NULL);
         if (window == NULL) {
                 std::cout << "Failed to create GLFW window.\n";
                 glfwTerminate();
@@ -103,7 +103,10 @@ int main() {
             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
             -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f};
+            -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f};
+
+        // The bottom 3 vertexs are where the texture is screwed up
+        // at the top
 
         // positions all containers
         glm::vec3 cubePositions[] = {
@@ -150,9 +153,9 @@ int main() {
                               (void *)0);
         glEnableVertexAttribArray(0);
 
-        unsigned int diffuseMap = loadTexture("../textures/container2.png");
+        unsigned int diffuseMap = loadTexture("./textures/container2.png");
         unsigned int specularMap =
-            loadTexture("../textures/container2_specular.png");
+            loadTexture("./textures/container2_specular.png");
 
         lightingShader.use();
         lightingShader.setInt("material.diffuse", 0);
@@ -179,54 +182,44 @@ int main() {
                                         0.05f);
                 lightingShader.setVec3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
                 lightingShader.setVec3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
-                // point light 1
-                lightingShader.setVec3f("pointLights[0].position",
-                                        pointLightPositions[0]);
-                lightingShader.setVec3f("pointLights[0].ambient", 0.05f, 0.05f,
-                                        0.05f);
-                lightingShader.setVec3f("pointLights[0].diffuse", 0.8f, 0.8f,
-                                        0.8f);
-                lightingShader.setVec3f("pointLights[0].specular", 1.0f, 1.0f,
-                                        1.0f);
-                lightingShader.setFloat("pointLights[0].constant", 1.0f);
-                lightingShader.setFloat("pointLights[0].linear", 0.09f);
-                lightingShader.setFloat("pointLights[0].quadratic", 0.032f);
-                // point light 2
-                lightingShader.setVec3f("pointLights[1].position",
-                                        pointLightPositions[1]);
-                lightingShader.setVec3f("pointLights[1].ambient", 0.05f, 0.05f,
-                                        0.05f);
-                lightingShader.setVec3f("pointLights[1].diffuse", 0.8f, 0.8f,
-                                        0.8f);
-                lightingShader.setVec3f("pointLights[1].specular", 1.0f, 1.0f,
-                                        1.0f);
-                lightingShader.setFloat("pointLights[1].constant", 1.0f);
-                lightingShader.setFloat("pointLights[1].linear", 0.09f);
-                lightingShader.setFloat("pointLights[1].quadratic", 0.032f);
-                // point light 3
-                lightingShader.setVec3f("pointLights[2].position",
-                                        pointLightPositions[2]);
-                lightingShader.setVec3f("pointLights[2].ambient", 0.05f, 0.05f,
-                                        0.05f);
-                lightingShader.setVec3f("pointLights[2].diffuse", 0.8f, 0.8f,
-                                        0.8f);
-                lightingShader.setVec3f("pointLights[2].specular", 1.0f, 1.0f,
-                                        1.0f);
-                lightingShader.setFloat("pointLights[2].constant", 1.0f);
-                lightingShader.setFloat("pointLights[2].linear", 0.09f);
-                lightingShader.setFloat("pointLights[2].quadratic", 0.032f);
-                // point light 4
-                lightingShader.setVec3f("pointLights[3].position",
-                                        pointLightPositions[3]);
-                lightingShader.setVec3f("pointLights[3].ambient", 0.05f, 0.05f,
-                                        0.05f);
-                lightingShader.setVec3f("pointLights[3].diffuse", 0.8f, 0.8f,
-                                        0.8f);
-                lightingShader.setVec3f("pointLights[3].specular", 1.0f, 1.0f,
-                                        1.0f);
-                lightingShader.setFloat("pointLights[3].constant", 1.0f);
-                lightingShader.setFloat("pointLights[3].linear", 0.09f);
-                lightingShader.setFloat("pointLights[3].quadratic", 0.032f);
+
+                for (int i = 0; i < 4; i++) {
+                        glm::vec3 pointLightAmbient =
+                            pointLightColors[i] * 0.0f;
+                        glm::vec3 pointLightDiffuse =
+                            pointLightColors[i] * 0.8f;
+                        glm::vec3 pointLightSpecural =
+                            pointLightColors[i] * 1.0f;
+
+                        std::ostringstream pointLightIdxStream;
+                        pointLightIdxStream << "pointLights[" << i << "]";
+
+                        std::string uniformName =
+                            pointLightIdxStream.str() + ".position";
+                        lightingShader.setVec3f(uniformName.c_str(),
+                                                pointLightPositions[i]);
+
+                        uniformName = pointLightIdxStream.str() + ".ambient";
+                        lightingShader.setVec3f(uniformName.c_str(),
+                                                pointLightAmbient);
+
+                        uniformName = pointLightIdxStream.str() + ".diffuse";
+                        lightingShader.setVec3f(uniformName.c_str(),
+                                                pointLightDiffuse);
+
+                        uniformName = pointLightIdxStream.str() + ".specural";
+                        lightingShader.setVec3f(uniformName.c_str(),
+                                                pointLightSpecural);
+
+                        uniformName = pointLightIdxStream.str() + ".constant";
+                        lightingShader.setFloat(uniformName.c_str(), 1.0);
+
+                        uniformName = pointLightIdxStream.str() + ".linear";
+                        lightCubeShader.setFloat(uniformName.c_str(), 0.045);
+
+                        uniformName = pointLightIdxStream.str() + ".quadratic";
+                        lightCubeShader.setFloat(uniformName.c_str(), 0.0075);
+                }
                 // spotLight
                 lightingShader.setVec3f("spotLight.position", camera.Position);
                 lightingShader.setVec3f("spotLight.direction", camera.Front);
@@ -236,7 +229,7 @@ int main() {
                 lightingShader.setFloat("spotLight.constant", 1.0f);
                 lightingShader.setFloat("spotLight.linear", 0.09f);
                 lightingShader.setFloat("spotLight.quadratic", 0.032f);
-                lightingShader.setFloat("spotLight.cutOff",
+                lightingShader.setFloat("spotLight.innerCutOff",
                                         glm::cos(glm::radians(12.5f)));
                 lightingShader.setFloat("spotLight.outerCutOff",
                                         glm::cos(glm::radians(15.0f)));
@@ -288,6 +281,8 @@ int main() {
                         model = glm::scale(
                             model, glm::vec3(0.2f)); // Make it a smaller cube
                         lightCubeShader.setMat4f("model", model);
+                        lightCubeShader.setVec3f("cubeColor",
+                                                 pointLightColors[i]);
                         glDrawArrays(GL_TRIANGLES, 0, 36);
                 }
 
@@ -351,6 +346,7 @@ unsigned int loadTexture(char const *path) {
         glGenTextures(1, &textureID);
 
         int width, height, nrComponents;
+        std::cout << path << "\n";
         unsigned char *data =
             stbi_load(path, &width, &height, &nrComponents, 0);
 
@@ -370,7 +366,7 @@ unsigned int loadTexture(char const *path) {
                 glGenerateMipmap(GL_TEXTURE_2D);
 
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                                 GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
