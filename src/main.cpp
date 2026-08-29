@@ -316,6 +316,33 @@ void processInput(GLFWwindow *window) {
                 camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+        glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
+        float xpos = static_cast<float>(xposIn);
+        float ypos = static_cast<float>(yposIn);
+
+        if (firstMouse) {
+                lastX = xpos;
+                lastY = ypos;
+                firstMouse = false;
+        }
+
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos;
+
+        lastX = xpos;
+        lastY = ypos;
+
+        camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+        camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
 unsigned int loadTexture(char const *path) {
         unsigned int textureID;
         glGenTextures(1, &textureID);
