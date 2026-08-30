@@ -1,0 +1,9 @@
+libdir=/home/tj/workspace/github.com/tj-r/opengl-basics-cpp/external/assimp/lib
+includedir=/home/tj/workspace/github.com/tj-r/opengl-basics-cpp/external/assimp/include
+
+Name: Assimp
+Description: Import various well-known 3D model formats in an uniform manner.
+Version: 6.0.5
+Libs: -L${libdir} -lassimp
+Libs.private: -lstdc++ 
+Cflags: -I${includedir}

@@ -33,10 +33,18 @@ target_sources(OpenGLBasics PRIVATE
     src/headers/camera.h
 )
 
+target_include_directories(OpenGLBasics PRIVATE ${CMAKE_SOURCE_DIR}/external/assimp/include)
+
+target_link_directories(OpenGLBasics PRIVATE ${CMAKE_SOURCE_DIR}/external/assimp/lib)
+
 target_link_libraries(OpenGLBasics PRIVATE
     glfw
     glm
     OpenGL::GL
     glad
     stb_image
+    assimp
 )
+
+set_target_properties(OpenGLBasics PROPERTIES
+    BUILD_PATH "${CMAKE_SOURCE_DIR}/external/assimp/lib")
