@@ -103,7 +103,7 @@ int main() {
             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
             -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-            -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f};
+            -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f};
 
         // The bottom 3 vertexs are where the texture is screwed up
         // at the top
@@ -121,9 +121,13 @@ int main() {
             glm::vec3(0.7f, 0.2f, 2.0f), glm::vec3(2.3f, -3.3f, -4.0f),
             glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f)};
 
+        // glm::vec3 pointLightColors[] = {
+        //     glm::vec3(1.0f, 0.2f, 1.0f), glm::vec3(0.2f, 0.2f, 1.0f),
+        //     glm::vec3(0.2f, 0.2f, 1.0f), glm::vec3(0.2f, 0.2f, 1.0f)};
+
         glm::vec3 pointLightColors[] = {
-            glm::vec3(0.2f, 0.2f, 1.0f), glm::vec3(0.2f, 0.2f, 1.0f),
-            glm::vec3(0.2f, 0.2f, 1.0f), glm::vec3(0.2f, 0.2f, 1.0f)};
+            glm::vec3(1.0f, 0.2f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)};
 
         unsigned int VBO, cubeVAO;
         glGenVertexArrays(1, &cubeVAO);
@@ -157,6 +161,8 @@ int main() {
         unsigned int specularMap =
             loadTexture("./textures/container2_specular.png");
 
+        std::cout << "specular map id: " << specularMap << "\n";
+
         lightingShader.use();
         lightingShader.setInt("material.diffuse", 0);
         lightingShader.setInt("material.specular", 1);
@@ -187,8 +193,8 @@ int main() {
                         glm::vec3 pointLightAmbient =
                             pointLightColors[i] * 0.0f;
                         glm::vec3 pointLightDiffuse =
-                            pointLightColors[i] * 0.8f;
-                        glm::vec3 pointLightSpecural =
+                            pointLightColors[i] * 0.5f;
+                        glm::vec3 pointLightspecular =
                             pointLightColors[i] * 1.0f;
 
                         std::ostringstream pointLightIdxStream;
@@ -207,18 +213,21 @@ int main() {
                         lightingShader.setVec3f(uniformName.c_str(),
                                                 pointLightDiffuse);
 
-                        uniformName = pointLightIdxStream.str() + ".specural";
+                        uniformName = pointLightIdxStream.str() + ".specular";
                         lightingShader.setVec3f(uniformName.c_str(),
-                                                pointLightSpecural);
+                                                pointLightspecular);
 
                         uniformName = pointLightIdxStream.str() + ".constant";
                         lightingShader.setFloat(uniformName.c_str(), 1.0);
 
+                        // std::cout << uniformName << std::endl;
+
                         uniformName = pointLightIdxStream.str() + ".linear";
-                        lightCubeShader.setFloat(uniformName.c_str(), 0.045);
+                        lightCubeShader.setFloat(uniformName.c_str(), 100);
+                        // std::cout << uniformName << std::endl;
 
                         uniformName = pointLightIdxStream.str() + ".quadratic";
-                        lightCubeShader.setFloat(uniformName.c_str(), 0.0075);
+                        lightCubeShader.setFloat(uniformName.c_str(), 100);
                 }
                 // spotLight
                 lightingShader.setVec3f("spotLight.position", camera.Position);
@@ -346,7 +355,6 @@ unsigned int loadTexture(char const *path) {
         glGenTextures(1, &textureID);
 
         int width, height, nrComponents;
-        std::cout << path << "\n";
         unsigned char *data =
             stbi_load(path, &width, &height, &nrComponents, 0);
 
