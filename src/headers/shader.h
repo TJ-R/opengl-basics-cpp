@@ -21,13 +21,13 @@ class Shader {
 
         void use();
 
-        void setBool(const char *name, bool val);
-        void setInt(const char *name, GLint val);
-        void setFloat(const char *name, GLfloat val);
-        void setVec3f(const char *name, glm::vec3 val);
-        void setVec3f(const char *name, GLfloat x, GLfloat y, GLfloat z);
-        void setVec4f(const char *name, glm::vec4 val);
-        void setVec4f(const char *name, GLfloat x, GLfloat y, GLfloat z,
+        void setBool(const std::string &name, bool val);
+        void setInt(const std::string &name, GLint val);
+        void setFloat(const std::string &name, GLfloat val);
+        void setVec3f(const std::string &name, glm::vec3 val);
+        void setVec3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z);
+        void setVec4f(const std::string &name, glm::vec4 val);
+        void setVec4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z,
                       GLfloat w);
-        void setMat4f(const char *name, glm::mat4 mat);
+        void setMat4f(const std::string &name, glm::mat4 mat);
 };

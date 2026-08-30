@@ -126,7 +126,7 @@ int main() {
         //     glm::vec3(0.2f, 0.2f, 1.0f), glm::vec3(0.2f, 0.2f, 1.0f)};
 
         glm::vec3 pointLightColors[] = {
-            glm::vec3(1.0f, 0.2f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)};
 
         unsigned int VBO, cubeVAO;
@@ -144,7 +144,7 @@ int main() {
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                               (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                               (void *)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
@@ -191,43 +191,38 @@ int main() {
 
                 for (int i = 0; i < 4; i++) {
                         glm::vec3 pointLightAmbient =
-                            pointLightColors[i] * 0.0f;
+                            pointLightColors[i] * 0.05f;
                         glm::vec3 pointLightDiffuse =
-                            pointLightColors[i] * 0.5f;
-                        glm::vec3 pointLightspecular =
+                            pointLightColors[i] * 0.8f;
+                        glm::vec3 pointLightSpecular =
                             pointLightColors[i] * 1.0f;
 
-                        std::ostringstream pointLightIdxStream;
-                        pointLightIdxStream << "pointLights[" << i << "]";
+                        std::stringstream pointLightIdxStream;
+                        pointLightIdxStream << "pointLights[" << i << "].";
 
                         std::string uniformName =
-                            pointLightIdxStream.str() + ".position";
-                        lightingShader.setVec3f(uniformName.c_str(),
+                            pointLightIdxStream.str() + "position";
+                        lightingShader.setVec3f(uniformName,
                                                 pointLightPositions[i]);
 
-                        uniformName = pointLightIdxStream.str() + ".ambient";
-                        lightingShader.setVec3f(uniformName.c_str(),
-                                                pointLightAmbient);
+                        uniformName = pointLightIdxStream.str() + "ambient";
+                        lightingShader.setVec3f(uniformName, pointLightAmbient);
 
-                        uniformName = pointLightIdxStream.str() + ".diffuse";
-                        lightingShader.setVec3f(uniformName.c_str(),
-                                                pointLightDiffuse);
+                        uniformName = pointLightIdxStream.str() + "diffuse";
+                        lightingShader.setVec3f(uniformName, pointLightDiffuse);
 
-                        uniformName = pointLightIdxStream.str() + ".specular";
-                        lightingShader.setVec3f(uniformName.c_str(),
-                                                pointLightspecular);
+                        uniformName = pointLightIdxStream.str() + "specular";
+                        lightingShader.setVec3f(uniformName,
+                                                pointLightSpecular);
 
-                        uniformName = pointLightIdxStream.str() + ".constant";
-                        lightingShader.setFloat(uniformName.c_str(), 1.0);
+                        uniformName = pointLightIdxStream.str() + "constant";
+                        lightingShader.setFloat(uniformName, 1.0f);
 
-                        // std::cout << uniformName << std::endl;
+                        uniformName = pointLightIdxStream.str() + "linear";
+                        lightingShader.setFloat(uniformName, 0.09f);
 
-                        uniformName = pointLightIdxStream.str() + ".linear";
-                        lightCubeShader.setFloat(uniformName.c_str(), 100);
-                        // std::cout << uniformName << std::endl;
-
-                        uniformName = pointLightIdxStream.str() + ".quadratic";
-                        lightCubeShader.setFloat(uniformName.c_str(), 100);
+                        uniformName = pointLightIdxStream.str() + "quadratic";
+                        lightingShader.setFloat(uniformName, 0.032f);
                 }
                 // spotLight
                 lightingShader.setVec3f("spotLight.position", camera.Position);
@@ -238,9 +233,9 @@ int main() {
                 lightingShader.setFloat("spotLight.constant", 1.0f);
                 lightingShader.setFloat("spotLight.linear", 0.09f);
                 lightingShader.setFloat("spotLight.quadratic", 0.032f);
-                lightingShader.setFloat("spotLight.innerCutOff",
+                lightingShader.setFloat("spotLight.innerCutoff",
                                         glm::cos(glm::radians(12.5f)));
-                lightingShader.setFloat("spotLight.outerCutOff",
+                lightingShader.setFloat("spotLight.outerCutoff",
                                         glm::cos(glm::radians(15.0f)));
 
                 // view/projection transformations

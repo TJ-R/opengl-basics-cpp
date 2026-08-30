@@ -73,43 +73,46 @@ void Shader::use() {
         glUseProgram(programId);
 }
 
-void Shader::setBool(const char *name, bool val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setBool(const std::string &name, bool val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniform1i(location, (int)val);
 }
 
-void Shader::setInt(const char *name, GLint val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setInt(const std::string &name, GLint val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniform1i(location, val);
 }
 
-void Shader::setFloat(const char *name, GLfloat val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setFloat(const std::string &name, GLfloat val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
+        std::cout << name << " location is " << location << "\n";
         glUniform1f(location, val);
 }
 
-void Shader::setVec3f(const char *name, glm::vec3 val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setVec3f(const std::string &name, glm::vec3 val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
+        std::cout << name << " location is " << location << "\n";
         glUniform3f(location, val.x, val.y, val.z);
 }
 
-void Shader::setVec3f(const char *name, GLfloat x, GLfloat y, GLfloat z) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setVec3f(const std::string &name, GLfloat x, GLfloat y,
+                      GLfloat z) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniform3f(location, x, y, z);
 }
 
-void Shader::setVec4f(const char *name, glm::vec4 val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setVec4f(const std::string &name, glm::vec4 val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniform4f(location, val.x, val.y, val.z, val.w);
 }
 
-void Shader::setVec4f(const char *name, GLfloat x, GLfloat y, GLfloat z,
+void Shader::setVec4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z,
                       GLfloat w) {
-        GLint location = glGetUniformLocation(programId, name);
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniform4f(location, x, y, z, w);
 }
 
-void Shader::setMat4f(const char *name, glm::mat4 val) {
-        GLint location = glGetUniformLocation(programId, name);
+void Shader::setMat4f(const std::string &name, glm::mat4 val) {
+        GLint location = glGetUniformLocation(programId, name.c_str());
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(val));
 }
