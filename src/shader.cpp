@@ -85,13 +85,11 @@ void Shader::setInt(const std::string &name, GLint val) {
 
 void Shader::setFloat(const std::string &name, GLfloat val) {
         GLint location = glGetUniformLocation(programId, name.c_str());
-        std::cout << name << " location is " << location << "\n";
         glUniform1f(location, val);
 }
 
 void Shader::setVec3f(const std::string &name, glm::vec3 val) {
         GLint location = glGetUniformLocation(programId, name.c_str());
-        std::cout << name << " location is " << location << "\n";
         glUniform3f(location, val.x, val.y, val.z);
 }
 
