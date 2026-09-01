@@ -16,6 +16,7 @@ struct Texture {
 };
 
 class Mesh {
+
       public:
         std::vector<Vertex> verticies;
         std::vector<unsigned int> indices;
@@ -37,11 +38,33 @@ class Mesh {
                 // Need to make a combined vector of vertices and textures?
                 // std::vector<float> data =
 
-                void *data = static_cast<void *>(this->verticies.data());
-
                 glGenBuffers(1, &VBO);
                 glBindBuffer(GL_ARRAY_BUFFER, VBO);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * verticies.size(),
-                             data, GL_STATIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex), &verticies[0],
+                             GL_STATIC_DRAW);
+
+                glGenVertexArrays(1, &VAO);
+                glBindVertexArray(VAO);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                                      8 * sizeof(float), 0);
+                glEnableVertexAttribArray(0);
+                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                                      8 * sizeof(float),
+                                      (void *)offsetof(Vertex, Normal));
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+                                      8 * sizeof(float),
+                                      (void *)offsetof(Vertex, TextureCoords));
+                glEnableVertexAttribArray(2);
+
+                glGenBuffers(1, &EBO);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                             sizeof(unsigned int) * indices.size(), &indices[0],
+                             GL_STATIC_DRAW);
+
+                // Unbinding the array buffer when EBO had data so it can be
+                // reused anytime the VAO is bound
+                glBindVertexArray(0);
         };
 };
