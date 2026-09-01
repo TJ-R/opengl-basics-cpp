@@ -30,7 +30,44 @@ class Mesh {
 
                 setupMesh();
         }
-        void draw(Shader &shader);
+        void draw(Shader &shader) {
+                // Bind Textures
+                unsigned int diffuseNr = 1;
+                unsigned int specularNr = 1;
+
+                // This is a way to bind an unknown amount of textures
+                // to the shader just need to make sure the max amount
+                // textures is available in the shader
+                for (int i = 0; i < textures.size(); i++) {
+                        // Just increment the base enum by i
+                        // should move to which enum it is using
+                        glActiveTexture(GL_TEXTURE0 + i);
+
+                        std::string name = textures[i].type;
+                        std::string number;
+                        if (name == "texture_diffuse") {
+                                // Assuming that diffuseNr will increment in
+                                // post
+                                // ++diffuseNr would pre increment. I.e. one
+                                // before to_string and one after
+                                number = std::to_string(diffuseNr++);
+                        } else if (name == "texture_specular") {
+                                number = std::to_string(specularNr++);
+                        }
+
+                        // Store the texutres in some struct + name + number
+                        // resulting in looking for material.texture_diffuse1
+                        // or material.texutre_specular2, etc
+                        shader.setInt("material." + name + number, i);
+                        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+                }
+
+                // Draw
+                glBindVertexArray(VAO);
+                glDrawElements(GL_TRIANGLES, indices.size() / 3,
+                               GL_UNSIGNED_INT, &indices[0]);
+                glBindVertexArray(0);
+        }
 
       private:
         unsigned int VAO, VBO, EBO;
@@ -40,8 +77,8 @@ class Mesh {
 
                 glGenBuffers(1, &VBO);
                 glBindBuffer(GL_ARRAY_BUFFER, VBO);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex), &verticies[0],
-                             GL_STATIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * verticies.size(),
+                             &verticies[0], GL_STATIC_DRAW);
 
                 glGenVertexArrays(1, &VAO);
                 glBindVertexArray(VAO);
