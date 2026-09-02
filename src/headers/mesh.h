@@ -1,3 +1,6 @@
+#ifndef MESH_H
+#define MESH_H
+
 #include <glad/glad.h>
 
 #include "shader.h"
@@ -13,10 +16,10 @@ struct Vertex {
 struct Texture {
         unsigned int id;
         std::string type;
+        std::string path;
 };
 
 class Mesh {
-
       public:
         std::vector<Vertex> verticies;
         std::vector<unsigned int> indices;
@@ -30,7 +33,7 @@ class Mesh {
 
                 setupMesh();
         }
-        void draw(Shader &shader) {
+        void Draw(Shader &shader) {
                 // Bind Textures
                 unsigned int diffuseNr = 1;
                 unsigned int specularNr = 1;
@@ -105,3 +108,4 @@ class Mesh {
                 glBindVertexArray(0);
         };
 };
+#endif
