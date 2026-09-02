@@ -6,6 +6,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 
 unsigned int TextureFromFile(const char *path, const std::string &directory,
@@ -27,6 +29,7 @@ class Model {
         std::string directory;
 
         void loadModel(std::string path) {
+                std::cout << "Loading model\n";
                 Assimp::Importer import;
                 const aiScene *scene = import.ReadFile(
                     path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -42,6 +45,8 @@ class Model {
                 processNode(scene->mRootNode, scene);
         };
         void processNode(aiNode *node, const aiScene *scene) {
+                std::cout << "Number of meshes to process for node: "
+                          << node->mNumMeshes << "\n";
                 // Go into each node and for each mesh in the node
                 // and process the mesh then add the proccessed mesh to the
                 // vector of meshes
