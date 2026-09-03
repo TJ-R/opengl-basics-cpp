@@ -1,0 +1,22 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Build",
+      "configurePreset": "default-multi",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release",
+      "displayName": "Release Build",
+      "configurePreset": "default-multi",
+      "configuration": "Release"
+    }
+  ]
+}

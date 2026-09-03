@@ -88,7 +88,6 @@ int main() {
 
                 std::string modelPath = "./models/backpack/backpack.obj";
                 Model *backpack = new Model(modelPath.data());
-                std::cout << "Drawing backpack\n";
                 backpack->Draw(objShader);
 
                 // glfw: swap buffers and poll IO events (keys
