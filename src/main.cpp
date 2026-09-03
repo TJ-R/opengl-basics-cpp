@@ -60,6 +60,9 @@ int main() {
 
         Shader objShader("./shaders/backpack.vert", "./shaders/backpack.frag");
 
+        std::string modelPath = "./models/backpack/backpack.obj";
+        Model *backpack = new Model(modelPath.data());
+
         while (!glfwWindowShouldClose(window)) {
                 float currentFrame = static_cast<float>(glfwGetTime());
                 deltaTime = currentFrame - lastFrame;
@@ -91,8 +94,6 @@ int main() {
                                                   // scene, so scale it down
                 objShader.setMat4f("model", model);
 
-                std::string modelPath = "./models/backpack/backpack.obj";
-                Model *backpack = new Model(modelPath.data());
                 backpack->Draw(objShader);
 
                 // glfw: swap buffers and poll IO events (keys
