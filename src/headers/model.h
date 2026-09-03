@@ -12,9 +12,11 @@
 
 unsigned int TextureFromFile(const char *path, const std::string &directory,
                              bool gamma = false);
-
 class Model {
       public:
+        std::vector<Texture> textures_loaded;
+        std::vector<Mesh> meshes;
+        std::string directory;
         Model(char *path) {
                 loadModel(path);
         }
@@ -25,11 +27,7 @@ class Model {
         };
 
       private:
-        std::vector<Mesh> meshes;
-        std::string directory;
-
         void loadModel(std::string path) {
-                std::cout << "Loading model\n";
                 Assimp::Importer import;
                 const aiScene *scene = import.ReadFile(
                     path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -45,8 +43,6 @@ class Model {
                 processNode(scene->mRootNode, scene);
         };
         void processNode(aiNode *node, const aiScene *scene) {
-                std::cout << "Number of meshes to process for node: "
-                          << node->mNumMeshes << "\n";
                 // Go into each node and for each mesh in the node
                 // and process the mesh then add the proccessed mesh to the
                 // vector of meshes
@@ -115,16 +111,32 @@ class Model {
         std::vector<Texture> loadMaterialTexture(aiMaterial *mat,
                                                  aiTextureType type,
                                                  std::string typeName) {
-
                 std::vector<Texture> textures;
+
                 for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
                         aiString str;
                         mat->GetTexture(type, i, &str);
-                        Texture texture;
-                        texture.id = TextureFromFile(str.C_Str(), directory);
-                        texture.type = typeName;
-                        texture.path = str.C_Str();
-                        textures.push_back(texture);
+
+                        bool skip = false;
+                        for (unsigned int j = 0; j < textures_loaded.size();
+                             j++) {
+                                if (std::strcmp(textures_loaded[j].path.data(),
+                                                str.C_Str()) == 0) {
+                                        textures.push_back(textures_loaded[j]);
+                                        skip = true;
+                                        break;
+                                }
+                        }
+
+                        if (!skip) {
+                                Texture texture;
+                                texture.id =
+                                    TextureFromFile(str.C_Str(), directory);
+                                texture.type = typeName;
+                                texture.path = str.C_Str();
+                                textures_loaded.push_back(texture);
+                                textures.push_back(texture);
+                        }
                 }
 
                 return textures;
@@ -135,6 +147,8 @@ unsigned int TextureFromFile(const char *path, const std::string &directory,
                              bool gamma) {
         std::string filename = std::string(path);
         filename = directory + '/' + filename;
+
+        std::cout << "Texture path: " << filename << "\n";
 
         unsigned int textureID;
         glGenTextures(1, &textureID);

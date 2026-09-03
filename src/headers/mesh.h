@@ -41,7 +41,6 @@ class Mesh {
                 // This is a way to bind an unknown amount of textures
                 // to the shader just need to make sure the max amount
                 // textures is available in the shader
-                std::cout << "NUMBER OF TEXTURES: " << textures.size() << "\n";
                 for (int i = 0; i < textures.size(); i++) {
                         // Just increment the base enum by i
                         // should move to which enum it is using
@@ -68,8 +67,8 @@ class Mesh {
 
                 // Draw
                 glBindVertexArray(VAO);
-                glDrawElements(GL_TRIANGLES, indices.size() / 3,
-                               GL_UNSIGNED_INT, &indices[0]);
+                glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,
+                               0);
                 glBindVertexArray(0);
         }
 

@@ -41,9 +41,8 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform Material material;
+uniform sampler2D texture_diffuse1;
 
 void main() {
-        vec3 resColor = vec3(0.0);
-        resColor += vec3(texture(material.texture_diffuse1, TexCoords));
-        FragColor = vec4(resColor, 1.0);
+        FragColor = vec4(texture(material.texture_diffuse1, TexCoords));
 }
