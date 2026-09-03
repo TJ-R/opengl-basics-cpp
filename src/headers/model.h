@@ -6,8 +6,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
 
 unsigned int TextureFromFile(const char *path, const std::string &directory,
@@ -60,23 +58,31 @@ class Model {
                 std::vector<unsigned int> indicies;
                 std::vector<Texture> textures;
 
+                glm::vec3 vector;
                 // Build Verticies
                 for (int i = 0; i < mesh->mNumVertices; i++) {
                         Vertex vertex;
-                        vertex.Position = glm::vec3(mesh->mVertices[i].x,
-                                                    mesh->mVertices[i].y,
-                                                    mesh->mVertices[i].z);
-                        vertex.Normal =
-                            glm::vec3(mesh->mNormals[i].x, mesh->mVertices[i].y,
-                                      mesh->mVertices[i].z);
+                        vector.x = mesh->mVertices[i].x;
+                        vector.y = mesh->mVertices[i].y;
+                        vector.z = mesh->mVertices[i].z;
+                        vertex.Position = vector;
+
+                        if (mesh->HasNormals()) {
+                                vector.x = mesh->mNormals[i].x;
+                                vector.y = mesh->mNormals[i].y;
+                                vector.z = mesh->mNormals[i].z;
+                                vertex.Normal = vector;
+                        }
 
                         // Somthing feels off about this one
                         if (mesh->mTextureCoords[0]) {
-                                vertex.TextureCoords =
-                                    glm::vec2(mesh->mTextureCoords[0][i].x,
-                                              mesh->mTextureCoords[0][i].y);
+                                glm::vec2 vector;
+                                vector.x = mesh->mTextureCoords[0][i].x;
+                                vector.y = mesh->mTextureCoords[0][i].y;
+                                vertex.TextureCoords = vector;
                         } else {
                                 vertex.TextureCoords = glm::vec2(0.0f, 0.0f);
+                                std::cout << "No Tex Coords\n";
                         }
 
                         vertices.push_back(vertex);

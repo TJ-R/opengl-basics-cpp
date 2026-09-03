@@ -1,7 +1,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
@@ -16,7 +16,6 @@ void main()
 	// on CPU rather than on the GPU
 	// This is for putting a normal in world space
 	// Normal = mat3(transpose(inverse(model))) * aNormal;
-	TexCoords = aTexCoord;
-
+	TexCoords = aTexCoords;
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
 }

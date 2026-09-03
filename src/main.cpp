@@ -3,6 +3,9 @@
 #include "./headers/camera.h"
 #include "./headers/model.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -50,6 +53,8 @@ int main() {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
                 std::cout << "Failed to initialize GLAD\n";
         }
+
+        stbi_set_flip_vertically_on_load(true);
 
         glEnable(GL_DEPTH_TEST);
 
