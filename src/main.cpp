@@ -19,7 +19,7 @@ unsigned int loadTexture(const char *path);
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -63,6 +63,9 @@ int main() {
         std::string modelPath = "./models/backpack/backpack.obj";
         Model *backpack = new Model(modelPath.data());
 
+        camera.setPitch(-90.0f);
+        camera.updateCameraVectors();
+
         while (!glfwWindowShouldClose(window)) {
                 float currentFrame = static_cast<float>(glfwGetTime());
                 deltaTime = currentFrame - lastFrame;
@@ -90,8 +93,8 @@ int main() {
                                                   // at the center of the scene
                 model = glm::scale(
                     model,
-                    glm::vec3(1.0f, 1.0f, 1.0f)); // it's a bit too big for our
-                                                  // scene, so scale it down
+                    glm::vec3(.5f, .5f, .5f)); // it's a bit too big for our
+                                               // scene, so scale it down
                 objShader.setMat4f("model", model);
 
                 backpack->Draw(objShader);

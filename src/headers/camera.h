@@ -103,7 +103,10 @@ class Camera {
                         Zoom = 45.0f;
         }
 
-      private:
+        void setPitch(float pitch) {
+                Pitch = pitch;
+        }
+
         void updateCameraVectors() {
                 glm::vec3 front;
                 front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
@@ -113,5 +116,7 @@ class Camera {
                 Right = glm::normalize(glm::cross(Front, WorldUp));
                 Up = glm::normalize(glm::cross(Right, Front));
         }
+
+      private:
 };
 #endif
